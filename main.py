@@ -1,20 +1,111 @@
-# This is a sample Python script.
-
-# Press Shift+F10 to execute it or replace it with your code.
-# Press Double Shift to search everywhere for classes, files, tool windows, actions, and settings.
-
-
-def print_hi(name):
-    # Use a breakpoint in the code line below to debug your script.
-    print(f'Hi, {name}')  # Press Ctrl+F8 to toggle the breakpoint.
+import cv2
+import numpy as np
+from flask import Flask, send_file
+import os
+import threading
+import subprocess
+from server import *
 
 
-# Press the green button in the gutter to run the script.
+# Funtions related to viewer software
+def start_program():
+    # code to be executed in thread 2
+    print("Hello from start!")
+    start()
+
+################# Part dedicated to view image
+def start():
+    # Load the template and source images
+    template = cv2.imread('image/target.png')
+    source = cv2.imread('image/original.png')
+
+    # Convert the images to grayscale
+    template_gray = cv2.cvtColor(template, cv2.COLOR_BGR2GRAY)
+    source_gray = cv2.cvtColor(source, cv2.COLOR_BGR2GRAY)
+
+    # Find the location of the template in the source image
+    result = cv2.matchTemplate(source_gray, template_gray, cv2.TM_CCOEFF_NORMED)
+
+    # Get the coordinates of the maximum value in the result
+    min_val, max_val, min_loc, max_loc = cv2.minMaxLoc(result)
+
+    # Check if the maximum value is above a certain threshold
+    if max_val > 0.8:
+        # If it is, draw a rectangle around the template in the source image
+        h, w = template.shape[:2]
+        top_left = max_loc
+        bottom_right = (top_left[0] + w, top_left[1] + h)
+        cv2.rectangle(source, top_left, bottom_right, (0, 0, 255), 2)
+
+    # coordinator of target
+    print('top')
+    print(top_left)
+
+    print('bottom_right')
+    print(bottom_right)
+
+    # Display the source image with the rectangle drawn on it
+    cv2.imwrite('image/save.png', source)
+
+
+################# Control android
+# Move the cursor to the specified coordinates
+def move_cursor(x, y):
+    run_adb_command(f"shell input tap {x} {y}")
+
+
+def run_adb_command(command):
+    adb_path = "data/data/com.android.sdk/platform-tools/adb"  # Replace this with the path to the ADB executable on your device
+    full_command = f"{adb_path} {command}"
+    output = os.popen(full_command).read()
+    print(output)
+
+################# Starting threads
+def starting_threads():
+    # create thread 1
+    thread_1 = threading.Thread(target=start_server)
+
+    # create thread 2
+    thread_2 = threading.Thread(target=start_program)
+
+    # start thread 1
+    thread_1.start()
+
+    # start thread 2
+    thread_2.start()
+
+################# Main Menu
 if __name__ == '__main__':
-    print_hi('PyCharm')
-    print_hi('PyCharm')
-    print_hi('PyCharm')
-    print_hi('PyCharm')
-    print_hi('PyCharm')
 
-# See PyCharm help at https://www.jetbrains.com/help/pycharm/
+    variable=0
+
+    if variable==1:
+        # Example usage: move the cursor to the center of the screen
+        screen_width = 2000  # Replace this with the width of your screen
+        screen_height = 1200  # Replace this with the height of your screen
+        x = screen_width // 2
+        y = screen_height // 2
+        move_cursor(x, y)
+
+        # Replace 'device_ip_or_serial' with the IP address or serial number of the device
+        # Replace 'x' and 'y' with the coordinates of the target position
+        device = 'TB-J616F_S240138_221026_ROW'
+        x = '100'
+        y = '20'
+
+        # Connect to the device
+        subprocess.run(['adb', 'connect', device])
+
+        # Send a touch event to the device
+        subprocess.run(['adb', 'shell', 'input', 'touchscreen', 'swipe', x, y, x, y], check=True)
+
+        # Disconnect from the device
+        subprocess.run(['adb', 'disconnect', device])
+    else:
+        print("Starting_threads")
+        starting_threads()
+
+
+
+
+
