@@ -6,17 +6,19 @@ from image_read import *
 
 # Funtions related to viewer software
 def start_program():
+
     # code to be executed in thread 2
     print("Hello from start!")
+    # Screenshot of screen
+    screen_shot() # Take screen shot of the screen
+    # Location of target
     original='image/screenshot.png'
     target='image/tag_gmail.png'
-    top_left, bottom_right=start_read_process(original, target)
+    center_pointX, center_pointY=start_read_process(original, target)
+    # Click on target
+    click_touch(center_pointX,center_pointY)
 
-    print("top_left")
-    print(top_left)
 
-    print("bottom_right")
-    print(bottom_right)
 
 
 ################# Starting threads
@@ -35,10 +37,10 @@ def starting_threads():
 if __name__ == '__main__':
     device = '19173cd4'  # Xiaomi phone
 
-    variable=0
+    variable=1
 
     if variable==1:
-        start_server()
+        #start_server()
         #time.sleep(4)
         #screen_shot()
         #connect(device)
