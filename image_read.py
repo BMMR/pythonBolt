@@ -30,7 +30,7 @@ def start_read_process(original,target):
     cv2.imwrite('image/save.png', source)
     # Point calculation of center
     top_leftF, bottom_rightF=calculation_point(top_left, bottom_right)
-
+    print(top_leftF+bottom_rightF)
     return top_leftF, bottom_rightF
 
 def calculation_point(top_left, bottom_right):
