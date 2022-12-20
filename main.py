@@ -1,3 +1,5 @@
+import time
+
 import cv2
 import numpy as np
 from flask import Flask, send_file
@@ -5,6 +7,7 @@ import os
 import threading
 import subprocess
 from server import *
+from control_android import *
 
 
 # Funtions related to viewer software
@@ -55,7 +58,7 @@ def move_cursor(x, y):
 
 
 def run_adb_command(command):
-    adb_path = "data/data/com.android.sdk/platform-tools/adb"  # Replace this with the path to the ADB executable on your device
+    adb_path = "platform-tools/adb"  # Replace this with the path to the ADB executable on your device
     full_command = f"{adb_path} {command}"
     output = os.popen(full_command).read()
     print(output)
@@ -76,31 +79,19 @@ def starting_threads():
 
 ################# Main Menu
 if __name__ == '__main__':
+    device = '19173cd4'  # Xiaomi phone
 
-    variable=0
+    variable=1
 
     if variable==1:
-        # Example usage: move the cursor to the center of the screen
-        screen_width = 2000  # Replace this with the width of your screen
-        screen_height = 1200  # Replace this with the height of your screen
-        x = screen_width // 2
-        y = screen_height // 2
-        move_cursor(x, y)
+        #start_server()
+        #time.sleep(4)
 
-        # Replace 'device_ip_or_serial' with the IP address or serial number of the device
-        # Replace 'x' and 'y' with the coordinates of the target position
-        device = 'TB-J616F_S240138_221026_ROW'
-        x = '100'
-        y = '20'
+        #connect(device)
+        click_touch("200","300")
+        #end_server(device)
 
-        # Connect to the device
-        subprocess.run(['adb', 'connect', device])
 
-        # Send a touch event to the device
-        subprocess.run(['adb', 'shell', 'input', 'touchscreen', 'swipe', x, y, x, y], check=True)
-
-        # Disconnect from the device
-        subprocess.run(['adb', 'disconnect', device])
     else:
         print("Starting_threads")
         starting_threads()
