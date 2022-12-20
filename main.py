@@ -83,13 +83,13 @@ if __name__ == '__main__':
 
     variable=1
 
+
     if variable==1:
         #start_server()
         #time.sleep(4)
-
         #connect(device)
-        click_touch("200","300")
-        #end_server(device)
+        #click_touch("200","300")
+        end_server(device)
 
 
     else:
