@@ -37,10 +37,10 @@ def starting_threads():
 if __name__ == '__main__':
     device = '19173cd4'  # Xiaomi phone
 
-    variable=1
+    variable=0
 
     if variable==1:
-        #start_server()
+        start_server()
         #time.sleep(4)
         #screen_shot()
         #connect(device)

@@ -43,7 +43,7 @@ def calculation_point(top_left, bottom_right):
     pointXF = int((pointX0+ pointX1)/2) # point X Final
     pointYF = int((pointY0+ pointY1)/2) # point X Final
 
-    return pointXF,pointYF
+    return str(pointXF),str(pointYF)
 
 
 
