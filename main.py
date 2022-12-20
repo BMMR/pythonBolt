@@ -2,6 +2,11 @@ import threading
 from server import *
 from control_android import *
 from image_read import *
+import pandas as pd
+
+# Funtions to extrat data
+
+
 
 
 # Funtions related to viewer software
@@ -37,10 +42,14 @@ def starting_threads():
 if __name__ == '__main__':
     device = '19173cd4'  # Xiaomi phone
 
-    variable=0
-
+    variable=1
     if variable==1:
-        start_server()
+        # Load the Excel file
+        df = pd.read_excel('file.xlsx')
+        # Print the contents of the Excel file
+        print(df)
+
+        #start_server()
         #time.sleep(4)
         #screen_shot()
         #connect(device)
