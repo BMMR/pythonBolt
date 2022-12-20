@@ -2,12 +2,7 @@ import threading
 from server import *
 from control_android import *
 from image_read import *
-import pandas as pd
-
-# Funtions to extrat data
-
-
-
+from read_excel import *
 
 # Funtions related to viewer software
 def start_program():
@@ -44,10 +39,8 @@ if __name__ == '__main__':
 
     variable=1
     if variable==1:
-        # Load the Excel file
-        df = pd.read_excel('file.xlsx')
-        # Print the contents of the Excel file
-        print(df)
+        id_scooter=read_excel()
+        print(id_scooter)
 
         #start_server()
         #time.sleep(4)
