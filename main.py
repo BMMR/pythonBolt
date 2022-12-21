@@ -11,7 +11,7 @@ def start_program():
     # code to be executed in thread 2
     print("Hello from start!")
 
-    target = ['tag_enter_id.png', 'tag_write_id.png', 'tag_open_sc.png', 'tag_replace_batt.png', 'tag_return.png']
+    target = ['image/targets/tag_chrome.png', 'image/targets/tag_record.png', 'image/targets/tag_open_sc.png', 'image/targets/tag_replace_batt.png', 'image/targets/tag_return.png']
     # Create an empty array
     # Iterate through the list of names
     for row in target:
@@ -21,12 +21,13 @@ def start_program():
         screen_shot() # Take screen shot of the screen
         # Location of target
         original='image/screenshot.png'
-        target='image/targets/tag_record.png'
-        center_pointX, center_pointY=start_read_process(original, target)
+        #target='image/targets/tag_record.png'
+        center_pointX, center_pointY=start_read_process(original, row)
         # Click on target
         click_touch(center_pointX,center_pointY)
-        time.sleep(10)
+        delect_last_row()
 
+        time.sleep(10)
 
 
 ######### Starting threads
