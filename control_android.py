@@ -35,7 +35,7 @@ def select_and_insert_text(x,y):
     subprocess.run(['adb', 'shell', 'input', 'touchscreen', 'tap', x, y])
 
 # Insert text in screen
-def insert_text(text)
+def insert_text(text):
 # Type the text "Hello World"
     subprocess.run(['adb', 'shell', 'input', 'text', text])
 
