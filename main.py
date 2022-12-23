@@ -11,23 +11,28 @@ def start_program():
     # code to be executed in thread
     target = ['image/targets/tag_enter_id.png', 'image/targets/tag_write_id.png', 'image/targets/tag_open_sc.png', 'image/targets/tag_replace_batt.png', 'image/targets/tag_return.png']
     # Create an empty array
-    # Iterate through the list of names
-    for row in target:
-        # Append the ame to the array
 
+    # Iterate through the list of names
+    for select_target in target:
         # Screenshot of screen
         screen_shot() # Take screen shot of the screen
         # Location of target
-        original='image/screenshot.png'
-        row='image/targets/tag_google_bar.png'
-        print("row:" + row)
-        center_pointX, center_pointY=start_read_process(original, row)
+        original = 'image/screenshot.png'
+        select_target = 'image/targets/tag_google_bar.png'
+        print("row:" + select_target)
+
+        center_pointX, center_pointY=start_read_process(original, select_target)
         # Click on target
         click_touch(center_pointX,center_pointY)
         time.sleep(1)
-        last_row_id=read_excel('external_info/Battery.xlsx')
-        insert_text(last_row_id)
-        delect_last_row('external_info/Battery.xlsx')
+        # Only delect file when the ID was writed
+        if select_target=="image/targets/tag_write_id.png":
+            last_row_id=read_excel('external_info/Battery.xlsx')
+            insert_text(last_row_id)
+            delect_last_row('external_info/Battery.xlsx')
+        else:
+            print("current target:" + select_target)
+
         time.sleep(10)
 
 ######### Starting threads
@@ -52,7 +57,6 @@ if __name__ == '__main__':
     device = '19173cd4'  # Xiaomi phone
     variable=0
     server=False
-
 
     if variable==1:
         #id_scooter=read_excel()
