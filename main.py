@@ -19,7 +19,7 @@ def start_program():
         screen_shot() # Take screen shot of the screen
         # Location of target
         original='image/screenshot.png'
-        #target='image/targets/tag_record.png'
+        target='image/targets/tag_record.png'
         center_pointX, center_pointY=start_read_process(original, row)
         # Click on target
         click_touch(center_pointX,center_pointY)
