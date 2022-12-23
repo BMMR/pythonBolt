@@ -1,6 +1,8 @@
+# Software made by Bruno Rocha, in 12-2022!
+# Version 1 (not tested in real world)
+
 import threading
 import time
-
 from server import *
 from control_android import *
 from image_read import *
