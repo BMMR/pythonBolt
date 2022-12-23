@@ -8,34 +8,39 @@ def start_read_process(original,target):
     source = cv2.imread(original) #image from screen of the phone
     template = cv2.imread(target) # image that is the target
 
-    # Convert the images to grayscale
-    template_gray = cv2.cvtColor(template, cv2.COLOR_BGR2GRAY)
-    source_gray = cv2.cvtColor(source, cv2.COLOR_BGR2GRAY)
+    try:
+        # Convert the images to grayscale
+        template_gray = cv2.cvtColor(template, cv2.COLOR_BGR2GRAY)
+        source_gray = cv2.cvtColor(source, cv2.COLOR_BGR2GRAY)
 
-    # Find the location of the template in the source image
-    result = cv2.matchTemplate(source_gray, template_gray, cv2.TM_CCOEFF_NORMED)
+        # Find the location of the template in the source image
+        result = cv2.matchTemplate(source_gray, template_gray, cv2.TM_CCOEFF_NORMED)
 
-    # Get the coordinates of the maximum value in the result
-    min_val, max_val, min_loc, max_loc = cv2.minMaxLoc(result)
+        # Get the coordinates of the maximum value in the result
+        min_val, max_val, min_loc, max_loc = cv2.minMaxLoc(result)
 
-    # Check if the maximum value is above a certain threshold
-    if max_val > 0.8:
-        # If it is, draw a rectangle around the template in the source image
-        h, w = template.shape[:2]
-        top_left = max_loc
-        bottom_right = (top_left[0] + w, top_left[1] + h)
-        cv2.rectangle(source, top_left, bottom_right, (0, 0, 255), 2)
+        # Check if the maximum value is above a certain threshold
+        if max_val > 0.8:
+            # If it is, draw a rectangle around the template in the source image
+            h, w = template.shape[:2]
+            top_left = max_loc
+            bottom_right = (top_left[0] + w, top_left[1] + h)
+            cv2.rectangle(source, top_left, bottom_right, (0, 0, 255), 2)
 
-    # Display the source image with the rectangle drawn on it
-    cv2.imwrite('image/save.png', source)
+        # Display the source image with the rectangle drawn on it
+        cv2.imwrite('image/save.png', source)
+
+    except:
+        print("Error: Image dont read")
+
     try:
         # Point calculation of center
         top_leftF, bottom_rightF=calculation_point(top_left, bottom_right)
         print(top_leftF + bottom_rightF)
     except:
         print("Dont_found_the_target")
-        top_leftF="0"
-        bottom_rightF="0"
+        top_leftF="0" # if dont find nothing
+        bottom_rightF="0" # if dont find nothing
 
     return top_leftF, bottom_rightF
 

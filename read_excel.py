@@ -1,9 +1,9 @@
 # Load the Excel file
 import pandas as pd
 
-def read_excel():
+def read_excel(file):
 
-    df = pd.read_excel('external_info/data_orders.xlsx')
+    df = pd.read_excel(file)
 
     for index, row in df.iterrows():
         # Extract the values from the current row and store them in variables
@@ -14,13 +14,13 @@ def read_excel():
     return Last_read
 
 
-def delect_last_row():
+def delect_last_row(file):
     # Read the Excel file into a DataFrame
-    df = pd.read_excel('external_info/data_orders.xlsx')
+    df = pd.read_excel(file)
 
     # Delete the last row
     df = df[:-1]
 
     # Save the DataFrame to the Excel file
-    df.to_excel('external_info/data_orders.xlsx', index=False)
+    df.to_excel(file, index=False)
 
