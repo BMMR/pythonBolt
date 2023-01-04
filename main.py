@@ -12,17 +12,16 @@ from read_excel import *
 def start_program():
     # code to be executed in thread
     target = ['image/targets/tag_enter_id.png', 'image/targets/tag_write_id.png', 'image/targets/tag_open_sc.png', 'image/targets/tag_replace_batt.png', 'image/targets/tag_return.png']
-    # Create an empty array
 
     # Iterate through the list of names
     for select_target in target:
         # Screenshot of screen
         screen_shot() # Take screen shot of the screen
         # Location of target
-        original = 'image/screenshot.png'
-        select_target = 'image/targets/tag_google_bar.png'
+        #original = 'image/screenshot.png'
+        #select_target = 'image/targets/tag_google_bar.png'
         print("row:" + select_target)
-
+        # Start read process
         center_pointX, center_pointY=start_read_process(original, select_target)
         # Click on target
         click_touch(center_pointX,center_pointY)
@@ -59,6 +58,7 @@ if __name__ == '__main__':
     device = '19173cd4'  # Xiaomi phone
     variable=0
     server=False
+    # Create system with order
 
     if variable==1:
         #id_scooter=read_excel()
