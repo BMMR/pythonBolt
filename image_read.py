@@ -1,5 +1,33 @@
 ################# Part dedicated to view image
 import cv2
+import numpy as np
+
+
+def read_process_version2(original,target):
+    # Load the input image and the template image
+    input_image = cv2.imread(original)
+    template_image = cv2.imread(target)
+
+    # Convert the images to grayscale
+    input_image_gray = cv2.cvtColor(input_image, cv2.COLOR_BGR2GRAY)
+    template_image_gray = cv2.cvtColor(template_image, cv2.COLOR_BGR2GRAY)
+
+    # Perform template matching
+    result = cv2.matchTemplate(input_image_gray, template_image_gray, cv2.TM_CCOEFF_NORMED)
+
+    # Check if the template image appears in the input image
+    threshold = 0.8
+    loc = np.where(result >= threshold)
+
+    if len(loc[0]) > 0:
+        # Template image was found, draw a bounding box around it
+        for pt in zip(*loc[::-1]):
+            cv2.rectangle(input_image, pt, (pt[0] + w, pt[1] + h), (0, 0, 255), 2)
+
+    # Show the output image
+    cv2.imshow('Output', input_image)
+    cv2.waitKey(0)
+
 
 
 def start_read_process(original,target):
@@ -20,7 +48,7 @@ def start_read_process(original,target):
         min_val, max_val, min_loc, max_loc = cv2.minMaxLoc(result)
 
         # Check if the maximum value is above a certain threshold
-        if max_val > 0.8:
+        if max_val > 0.7:
             # If it is, draw a rectangle around the template in the source image
             h, w = template.shape[:2]
             top_left = max_loc

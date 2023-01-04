@@ -18,10 +18,14 @@ def start_program():
         # Screenshot of screen
         screen_shot() # Take screen shot of the screen
         # Location of target
-        #original = 'image/screenshot.png'
-        #select_target = 'image/targets/tag_google_bar.png'
+        original = 'image/screenshot.png'
+        #original = 'image/simulation/sim_2.jpg'
+        time.sleep(2)
+        select_target = 'image/targets/tag_write_id.png'
         print("row:" + select_target)
         # Start read process
+        read_process_version2(original, select_target)
+
         center_pointX, center_pointY=start_read_process(original, select_target)
         # Click on target
         click_touch(center_pointX,center_pointY)
@@ -29,8 +33,8 @@ def start_program():
         # Only delect file when the ID was writed
         if select_target=="image/targets/tag_write_id.png":
             last_row_id=read_excel('external_info/Battery.xlsx')
-            insert_text(last_row_id)
-            delect_last_row('external_info/Battery.xlsx')
+            #insert_text(last_row_id) # insert text
+            #delect_last_row('external_info/Battery.xlsx') # delect last row from file
         else:
             print("current target:" + select_target)
 
@@ -55,7 +59,7 @@ def starting_threads(server):
 
 ################# Main Menu
 if __name__ == '__main__':
-    device = '19173cd4'  # Xiaomi phone
+    device = '19173cd4'  # Xiaomi phone (Bruno device)
     variable=0
     server=False
     # Create system with order
