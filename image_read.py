@@ -48,7 +48,7 @@ def start_read_process(original,target):
         min_val, max_val, min_loc, max_loc = cv2.minMaxLoc(result)
 
         # Check if the maximum value is above a certain threshold
-        if max_val > 0.7:
+        if max_val > 0.8:
             # If it is, draw a rectangle around the template in the source image
             h, w = template.shape[:2]
             top_left = max_loc
