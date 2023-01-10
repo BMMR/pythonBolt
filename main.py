@@ -18,43 +18,48 @@ def start_program():
 
     size_col=return_size_col(file_to_read, sheet_name, col_name)
     cont=0
+    select_mode=2
+    thresold=0.97
 
     while(size_col>cont):
         cont=cont+1
-
         # code to be executed in thread
-        target = ['image/targets/tag_enter_id.png', 'image/targets/tag_write_id.png', 'image/targets/tag_open_sc.png', 'image/targets/tag_return.png']
+        if (select_mode==1):
+            target_open_scooter = ['image/targets/tag_enter_id.png', 'image/targets/tag_write_id.png', 'image/targets/tag_open_sc.png', 'image/targets/tag_return.png']
+            target_exec = target_open_scooter
 
-        for select_target in target: ## Following rules
+        # 1º Select, "tag_enter_id": 2º Write, "tag_write_id": 3º Select, "tag_open_sc", 4º Select, "tag_3_dots"; 5º Select, "tag_replace_batt"; 6º) Select, "tag_return".
+        if select_mode==2:
+            target_open_batt_scooter = ['image/targets/tag_enter_id.png', 'image/targets/tag_write_id.png', 'image/targets/tag_open_sc.png','image/targets/tag_3_dots.png','image/targets/tag_replace_batt.png', 'image/targets/tag_return.png']
+            target_exec = target_open_batt_scooter
+
+
+        for select_target in target_exec: ## Following rules
             # Screenshot of screen
-            screen_shot() # Take screen shot of the screen
+            screen_shot(1) # Take screen shot of the screen
             # Location of target
-            #original = 'image/simulation/sim_11.png'
             original = 'image/screenshot.png'
-            print("Selected_target:" + select_target)
-            time.sleep(1)
-
             # Start read process
-            center_pointX, center_pointY=start_read_process(original, select_target)
+            center_pointX, center_pointY=start_read_process(original, select_target,thresold)
             # Click on target
             if center_pointX!="0" and center_pointY!="0":
                 print("click_made")
                 click_touch(center_pointX,center_pointY)
-                time.sleep(0.5)
+                time.sleep(1)
             # Only delect file when the ID was writed
             if select_target=="image/targets/tag_write_id.png":
                 last_row_id=read_excel('external_info/Battery.xlsx')
-                last_row_id="851640"
+                last_row_id = last_row_id.replace("-", "")
+                print("SCOOOTER_ID_ATUAL->>>>"+last_row_id)
+
+                #last_row_id="851640"
                 insert_text(last_row_id) # insert text
                 #delect_last_row('external_info/Battery.xlsx') # delect last row from file
             else:
                 print("current target:" + select_target)
 
-            print("esperar->" + str(select_target))
 
 
-        ###Open SC & take out Battery ###
-        # 1º Select, "tag_enter_id": 2º Write, "tag_write_id": 3º Select, "tag_open_sc", 4º Select, "tag_3_dots"; 5º Select, "tag_replace_batt"; 6º) Select, "tag_return".
 
 
 

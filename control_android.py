@@ -1,6 +1,9 @@
 import subprocess
 
 # Start the ADB server
+import time
+
+
 def start_server():
     subprocess.run(["platform-tools/adb", "start-server"])
 
@@ -17,7 +20,8 @@ def swipe_touch(x,y,x2,y2):
     subprocess.run(['platform-tools/adb', 'shell', 'input', 'touchscreen', 'swipe', x, y, x2, y2], check=True)
 
 #take screen shot
-def screen_shot():
+def screen_shot(sleep_time):
+    time.sleep(sleep_time)
     #This path my need to change in other computers change
     working_path="C:\\Users\Bruno\Desktop\projetos em curso\Bolt\pythonBolt\image"
     # Capture the screen of the device and save the image to a file on the SD card

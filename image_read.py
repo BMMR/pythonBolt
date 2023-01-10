@@ -30,7 +30,7 @@ def read_process_version2(original,target):
 
 
 
-def start_read_process(original,target):
+def start_read_process(original,target,thresold):
     # Load the template and source images
 
     source = cv2.imread(original) #image from screen of the phone
@@ -47,8 +47,10 @@ def start_read_process(original,target):
         # Get the coordinates of the maximum value in the result
         min_val, max_val, min_loc, max_loc = cv2.minMaxLoc(result)
 
+        print("max_val"+str(max_val))
+
         # Check if the maximum value is above a certain threshold
-        if max_val > 0.8:
+        if max_val > thresold:
             # If it is, draw a rectangle around the template in the source image
             h, w = template.shape[:2]
             top_left = max_loc
