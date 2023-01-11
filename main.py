@@ -86,15 +86,15 @@ def starting_threads(server,select_mode,thresold,speed_number,atual_speed):
 if __name__ == '__main__':
     #device = '19173cd4'  # Xiaomi phone (Bruno device)
     device = 'RFCCT10CRTL'  # SAMSUNG N6 (Bruno device)
-    select_mode=2
-    thresold=0.97
+    ativate_server = 0  # 1 to ativate the server to control the phone
 
-    speed_number=3
-    atual_speed=0.4
+    select_mode=2 # 1 - Open battery 2 - Take battery and open scooter
 
-    ativate_server=1
-    server=False
-    # Create system with order
+    # Ajustments for the cod
+    speed_number=3 # More longer time, because of the conection
+    atual_speed=0.4 # General speed
+    thresold = 0.97 # Ajusment for the image recognition
+    server=False # Start server ( not used for now)
 
     if ativate_server==1:
         start_server()
