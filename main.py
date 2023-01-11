@@ -91,7 +91,7 @@ if __name__ == '__main__':
     thresold=0.97
 
     speed_number=2
-    atual_speed=0.5
+    atual_speed=0.4
 
     ativate_server=0
     server=False
