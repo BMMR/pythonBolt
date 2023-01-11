@@ -9,7 +9,7 @@ from image_read import *
 from read_excel import *
 
 # Funtions related to viewer software
-def start_program(select_mode,thresold):
+def start_program(select_mode,thresold,speed_number,atual_speed):
     ###open SC###
     #1º Select, "tag_enter_id"; 2º Write, "tag_write_id"; 3º Select, "tag_open_sc"; 4º) Select, "tag_return";
     file_to_read="external_info/Battery.xlsx"
@@ -23,12 +23,12 @@ def start_program(select_mode,thresold):
         cont=cont+1
         # code to be executed in thread
         if (select_mode==1):
-            target_open_scooter = ['image/targets/tag_enter_id.png', 'image/targets/tag_write_id.png', 'image/targets/tag_open_sc.png', 'image/targets/tag_return.png']
+            target_open_scooter = ['image/targets/tag_enter_id.png', 'image/targets/tag_open_sc.png', 'image/targets/tag_return.png']
             target_exec = target_open_scooter
 
         # 1º Select, "tag_enter_id": 2º Write, "tag_write_id": 3º Select, "tag_open_sc", 4º Select, "tag_3_dots"; 5º Select, "tag_replace_batt"; 6º) Select, "tag_return".
         if select_mode==2:
-            target_open_batt_scooter = ['image/targets/tag_enter_id.png', 'image/targets/tag_write_id.png', 'image/targets/tag_open_sc.png','image/targets/tag_3_dots.png','image/targets/tag_replace_batt.png', 'image/targets/tag_return.png']
+            target_open_batt_scooter = ['image/targets/tag_enter_id.png', 'image/targets/tag_open_sc.png','image/targets/tag_3_dots.png','image/targets/tag_replace_batt.png', 'image/targets/tag_return.png']
             target_exec = target_open_batt_scooter
 
 
@@ -37,8 +37,8 @@ def start_program(select_mode,thresold):
 
             # Ajusting speed
             if select_target == "image/targets/tag_open_sc.png":  # process should be most slow
-                Speed_number = 2
-                atual_speed = Speed_number
+                speed_number = 2
+                atual_speed = speed_number
             else:
                 atual_speed = 0.4  # default speed
 
@@ -54,7 +54,7 @@ def start_program(select_mode,thresold):
                 click_touch(center_pointX,center_pointY)
                 time.sleep(0.1)
             # Only delect file when the ID was writed
-            if select_target=="image/targets/tag_write_id.png":
+            if select_target=="image/targets/tag_enter_id.png":
                 last_row_id=read_excel('external_info/Battery.xlsx')
                 last_row_id = last_row_id.replace("-", "")
                 last_row_id="851-640"
@@ -68,14 +68,14 @@ def start_program(select_mode,thresold):
 
 
 ######### Starting threads
-def starting_threads(server,select_mode,thresold):
+def starting_threads(server,select_mode,thresold,speed_number,atual_speed):
 
     if server:
         # create thread 1
         thread_1 = threading.Thread(target=start_web_server())
 
     # create thread 2
-    thread_2 = threading.Thread(target=start_program(select_mode,thresold))
+    thread_2 = threading.Thread(target=start_program(select_mode,thresold,speed_number,atual_speed))
 
     if server:
         # start thread 1
@@ -89,6 +89,9 @@ if __name__ == '__main__':
     device = 'RFCCT10CRTL'  # SAMSUNG N6 (Bruno device)
     select_mode=2
     thresold=0.97
+
+    speed_number=2
+    atual_speed=0.5
 
     ativate_server=0
     server=False
@@ -105,7 +108,7 @@ if __name__ == '__main__':
         #end_server(device)
     else:
         print("Starting_threads")
-        starting_threads(server,select_mode,thresold)
+        starting_threads(server,select_mode,thresold,speed_number,atual_speed)
 
 
 
