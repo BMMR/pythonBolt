@@ -9,7 +9,7 @@ from image_read import *
 from read_excel import *
 
 # Funtions related to viewer software
-def start_program():
+def start_program(select_mode,thresold):
     ###open SC###
     #1º Select, "tag_enter_id"; 2º Write, "tag_write_id"; 3º Select, "tag_open_sc"; 4º) Select, "tag_return";
     file_to_read="external_info/Battery.xlsx"
@@ -18,8 +18,6 @@ def start_program():
 
     size_col=return_size_col(file_to_read, sheet_name, col_name)
     cont=0
-    select_mode=2
-    thresold=0.97
 
     while(size_col>cont):
         cont=cont+1
@@ -34,9 +32,18 @@ def start_program():
             target_exec = target_open_batt_scooter
 
 
+
         for select_target in target_exec: ## Following rules
+
+            # Ajusting speed
+            if select_target == "image/targets/tag_open_sc.png":  # process should be most slow
+                Speed_number = 2
+                atual_speed = Speed_number
+            else:
+                atual_speed = 0.4  # default speed
+
             # Screenshot of screen
-            screen_shot(1) # Take screen shot of the screen
+            screen_shot(atual_speed) # Take screen shot of the screen
             # Location of target
             original = 'image/screenshot.png'
             # Start read process
@@ -45,11 +52,12 @@ def start_program():
             if center_pointX!="0" and center_pointY!="0":
                 print("click_made")
                 click_touch(center_pointX,center_pointY)
-                time.sleep(1)
+                time.sleep(0.1)
             # Only delect file when the ID was writed
             if select_target=="image/targets/tag_write_id.png":
                 last_row_id=read_excel('external_info/Battery.xlsx')
                 last_row_id = last_row_id.replace("-", "")
+                last_row_id="851-640"
                 print("SCOOOTER_ID_ATUAL->>>>"+last_row_id)
 
                 #last_row_id="851640"
@@ -59,24 +67,19 @@ def start_program():
                 print("current target:" + select_target)
 
 
-
-
-
-
 ######### Starting threads
-def starting_threads(server):
+def starting_threads(server,select_mode,thresold):
 
     if server:
         # create thread 1
         thread_1 = threading.Thread(target=start_web_server())
 
     # create thread 2
-    thread_2 = threading.Thread(target=start_program())
+    thread_2 = threading.Thread(target=start_program(select_mode,thresold))
 
     if server:
         # start thread 1
         thread_1.start()
-
     # start thread 2
     thread_2.start()
 
@@ -84,13 +87,14 @@ def starting_threads(server):
 if __name__ == '__main__':
     #device = '19173cd4'  # Xiaomi phone (Bruno device)
     device = 'RFCCT10CRTL'  # SAMSUNG N6 (Bruno device)
+    select_mode=2
+    thresold=0.97
 
-    variable=0
-
+    ativate_server=0
     server=False
     # Create system with order
 
-    if variable==1:
+    if ativate_server==1:
         #id_scooter=read_excel()
         #print(id_scooter)
         start_server()
@@ -101,7 +105,7 @@ if __name__ == '__main__':
         #end_server(device)
     else:
         print("Starting_threads")
-        starting_threads(server)
+        starting_threads(server,select_mode,thresold)
 
 
 
