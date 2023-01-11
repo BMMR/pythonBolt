@@ -92,19 +92,14 @@ if __name__ == '__main__':
     speed_number=3
     atual_speed=0.4
 
-    ativate_server=0
+    ativate_server=1
     server=False
     # Create system with order
 
     if ativate_server==1:
-        #id_scooter=read_excel()
-        #print(id_scooter)
         start_server()
-        #time.sleep(4)
-        #screen_shot()
-        #connect(device)
-        #click_touch("200","300")
-        #end_server(device)
+        #read_excel_from_drive()
+
     else:
         print("Starting_threads")
         starting_threads(server,select_mode,thresold,speed_number,atual_speed)
