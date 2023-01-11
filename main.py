@@ -37,13 +37,12 @@ def start_program(select_mode,thresold,speed_number,atual_speed):
 
             # Ajusting speed
             if select_target == "image/targets/tag_open_sc.png":  # process should be most slow
-                speed_number = 2
-                atual_speed = speed_number
+                set_speed = speed_number
             else:
-                atual_speed = 0.4  # default speed
+                set_speed =atual_speed
 
             # Screenshot of screen
-            screen_shot(atual_speed) # Take screen shot of the screen
+            screen_shot(set_speed) # Take screen shot of the screen
             # Location of target
             original = 'image/screenshot.png'
             # Start read process
@@ -90,7 +89,7 @@ if __name__ == '__main__':
     select_mode=2
     thresold=0.97
 
-    speed_number=2
+    speed_number=3
     atual_speed=0.4
 
     ativate_server=0
