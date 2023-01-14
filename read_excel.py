@@ -1,8 +1,6 @@
 # Load the Excel file
 import pandas as pd
-
 import gdown
-
 
 def read_excel_from_drive():
     url = "https://docs.google.com/spreadsheets/d/1P0iPFgKK4M_kiqTUgAHTa4X9NlGWmeZf5DKDPMvweI8/edit?usp=sharing"
@@ -14,8 +12,7 @@ def read_excel_from_drive():
         Last_read = row['Baterias']
         print(Last_read)
 
-
-def return_size_col(file_to_read,sheet_name,col_name):
+def return_excel_size_col(file_to_read,sheet_name,col_name):
     # Read the Excel file
     df = pd.read_excel(file_to_read, sheet_name=sheet_name)
 
@@ -27,20 +24,14 @@ def return_size_col(file_to_read,sheet_name,col_name):
 
     return size
 
-
-
 def read_excel(file):
 
     df = pd.read_excel(file)
-
     for index, row in df.iterrows():
         # Extract the values from the current row and store them in variables
         Last_read = row['id_scooter']
-
-
     # Print the contents of the Excel file
     return Last_read
-
 
 def delect_last_row(file):
     # Read the Excel file into a DataFrame

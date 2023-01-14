@@ -1,6 +1,8 @@
-# Software made by Bruno Rocha, in 12-2022!
-# Version 1 (not tested in real world)
-
+#################################################
+# Software made by : Bruno Rocha, in 12-2022!
+# Version 1
+# Obejtive: Send ordens to Bolt Charger in order to send several comands at same time
+#################################################
 import threading
 import time
 from server import *
@@ -16,7 +18,7 @@ def start_program(select_mode,thresold,speed_number,atual_speed):
     sheet_name="Baterias"
     col_name="id_scooter"
 
-    size_col=return_size_col(file_to_read, sheet_name, col_name)
+    size_col=return_excel_size_col(file_to_read, sheet_name, col_name)
     cont=0
 
     while(size_col>cont):
@@ -31,11 +33,8 @@ def start_program(select_mode,thresold,speed_number,atual_speed):
             target_open_batt_scooter = ['image/targets/tag_enter_id.png', 'image/targets/tag_open_sc.png','image/targets/tag_3_dots.png','image/targets/tag_replace_batt.png', 'image/targets/tag_return.png']
             target_exec = target_open_batt_scooter
 
-
-
-        for select_target in target_exec: ## Following rules
-
-            # Ajusting speed
+        for select_target in target_exec: # Following rules
+            # Ajusting speed of reading
             if select_target == "image/targets/tag_open_sc.png":  # process should be most slow
                 set_speed = speed_number
             else:
@@ -52,27 +51,24 @@ def start_program(select_mode,thresold,speed_number,atual_speed):
                 print("click_made")
                 click_touch(center_pointX,center_pointY)
                 time.sleep(0.1)
+
             # Only delect file when the ID was writed
             if select_target=="image/targets/tag_enter_id.png":
                 last_row_id=read_excel('external_info/Battery.xlsx')
                 last_row_id = last_row_id.replace("-", "")
-                last_row_id="851-640"
                 print("SCOOOTER_ID_ATUAL->>>>"+last_row_id)
 
-                #last_row_id="851640"
                 insert_text(last_row_id) # insert text
-                #delect_last_row('external_info/Battery.xlsx') # delect last row from file
+                delect_last_row('external_info/Battery.xlsx') # delect last row from file
             else:
                 print("current target:" + select_target)
 
 
 ######### Starting threads
 def starting_threads(server,select_mode,thresold,speed_number,atual_speed):
-
     if server:
         # create thread 1
         thread_1 = threading.Thread(target=start_web_server())
-
     # create thread 2
     thread_2 = threading.Thread(target=start_program(select_mode,thresold,speed_number,atual_speed))
 
@@ -86,20 +82,17 @@ def starting_threads(server,select_mode,thresold,speed_number,atual_speed):
 if __name__ == '__main__':
     #device = '19173cd4'  # Xiaomi phone (Bruno device)
     device = 'RFCCT10CRTL'  # SAMSUNG N6 (Bruno device)
-    ativate_server = 0  # 1 to ativate the server to control the phone
-
-    select_mode=2 # 1 - Open battery 2 - Take battery and open scooter
-
+    ativate_server = 0 # 1 to ativate the server to control the phone
+    select_mode=2 # 1 - Open battery 2 - Take battery and open scoote
     # Ajustments for the cod
     speed_number=3 # More longer time, because of the conection
-    atual_speed=0.4 # General speed
+    atual_speed=1 # General speed
     thresold = 0.97 # Ajusment for the image recognition
     server=False # Start server ( not used for now)
 
     if ativate_server==1:
         start_server()
         #read_excel_from_drive()
-
     else:
         print("Starting_threads")
         starting_threads(server,select_mode,thresold,speed_number,atual_speed)
