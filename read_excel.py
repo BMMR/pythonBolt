@@ -1,16 +1,20 @@
 # Load the Excel file
 import pandas as pd
 import gdown
+import gspread
+from oauth2client.service_account import ServiceAccountCredentials
+
 
 def read_excel_from_drive():
-    url = "https://docs.google.com/spreadsheets/d/1P0iPFgKK4M_kiqTUgAHTa4X9NlGWmeZf5DKDPMvweI8/edit?usp=sharing"
-    gdown.download(url,'Battery_supply.xlsx',quiet=False)
-    df=pd.read_excel('Battery_supply.xlsx',sheet_name='Baterias')
+    # login: boltscooterorders @ gmail.com
+    # Pass: BoltScooterOrdersGmail
+    # https://docs.google.com/spreadsheets/d/1P0iPFgKK4M_kiqTUgAHTa4X9NlGWmeZf5DKDPMvweI8/edit?usp=sharing
 
-    for index, row in df.iterrows():
-        # Extract the values from the current row and store them in variables
-        Last_read = row['Baterias']
-        print(Last_read)
+    url = "https://docs.google.com/spreadsheets/d/1P0iPFgKK4M_kiqTUgAHTa4X9NlGWmeZf5DKDPMvweI8/edit?usp=sharing"
+    output = 'file.xlsx'
+    gdown.download(url, output, quiet=False,fuzzy=True)
+
+
 
 def return_excel_size_col(file_to_read,sheet_name,col_name):
     # Read the Excel file
