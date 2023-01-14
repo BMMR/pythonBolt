@@ -2,37 +2,36 @@
 import cv2
 import numpy as np
 
+def selected_speed_read_image(select_target,fast_speed,slow_speed):
 
-def read_process_version2(original,target):
-    # Load the input image and the template image
-    input_image = cv2.imread(original)
-    template_image = cv2.imread(target)
+    # Ajusting speed of reading
+    if select_target == "image/targets/tag_open_sc.png":  # process should be slowest
+        set_speed = slow_speed  # Lower speed because of first loading
+    else:
+        set_speed = fast_speed  # Higher speed to process the code of phone (not related with the internet connection)
 
-    # Convert the images to grayscale
-    input_image_gray = cv2.cvtColor(input_image, cv2.COLOR_BGR2GRAY)
-    template_image_gray = cv2.cvtColor(template_image, cv2.COLOR_BGR2GRAY)
+    return set_speed
 
-    # Perform template matching
-    result = cv2.matchTemplate(input_image_gray, template_image_gray, cv2.TM_CCOEFF_NORMED)
 
-    # Check if the template image appears in the input image
-    threshold = 0.8
-    loc = np.where(result >= threshold)
+def selected_modes_of_working(select_mode):
+    # code to be executed in thread
+    if (select_mode == 1):
+        target_open_scooter = ['image/targets/tag_enter_id.png', 'image/targets/tag_open_sc.png',
+                               'image/targets/tag_return.png']
+        target_exec = target_open_scooter
 
-    if len(loc[0]) > 0:
-        # Template image was found, draw a bounding box around it
-        for pt in zip(*loc[::-1]):
-            cv2.rectangle(input_image, pt, (pt[0] + w, pt[1] + h), (0, 0, 255), 2)
+    if select_mode == 2:
+        target_open_batt_scooter = ['image/targets/tag_enter_id.png', 'image/targets/tag_open_sc.png',
+                                    'image/targets/tag_3_dots.png', 'image/targets/tag_replace_batt.png',
+                                    'image/targets/tag_return.png']
+        target_exec = target_open_batt_scooter
 
-    # Show the output image
-    cv2.imshow('Output', input_image)
-    cv2.waitKey(0)
-
+    return target_exec
 
 
 def start_read_process(original,target,thresold):
-    # Load the template and source images
 
+    # Load the template and source images
     source = cv2.imread(original) #image from screen of the phone
     template = cv2.imread(target) # image that is the target
 
@@ -40,13 +39,10 @@ def start_read_process(original,target,thresold):
         # Convert the images to grayscale
         template_gray = cv2.cvtColor(template, cv2.COLOR_BGR2GRAY)
         source_gray = cv2.cvtColor(source, cv2.COLOR_BGR2GRAY)
-
         # Find the location of the template in the source image
         result = cv2.matchTemplate(source_gray, template_gray, cv2.TM_CCOEFF_NORMED)
-
         # Get the coordinates of the maximum value in the result
         min_val, max_val, min_loc, max_loc = cv2.minMaxLoc(result)
-
         print("max_val"+str(max_val))
 
         # Check if the maximum value is above a certain threshold

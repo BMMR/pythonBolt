@@ -24,6 +24,14 @@ def return_excel_size_col(file_to_read,sheet_name,col_name):
 
     return size
 
+def read_return_all_cells(file_path,column_name):
+    # read the excel file into a pandas dataframe
+    df = pd.read_excel(file_path)
+    # get all cells in the specified column
+    column_cells = df[column_name]
+    return column_cells
+
+
 def read_excel(file):
 
     df = pd.read_excel(file)
@@ -32,6 +40,8 @@ def read_excel(file):
         Last_read = row['id_scooter']
     # Print the contents of the Excel file
     return Last_read
+
+
 
 def delect_last_row(file):
     # Read the Excel file into a DataFrame

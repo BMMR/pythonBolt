@@ -1,9 +1,7 @@
 import subprocess
-
-# Start the ADB server
 import time
 
-
+# Start server abd
 def start_server():
     subprocess.run(["platform-tools/adb", "start-server"])
 
@@ -39,9 +37,10 @@ def select_and_insert_text(x,y):
     subprocess.run(['platform-tools/adb', 'shell', 'input', 'touchscreen', 'tap', x, y])
 
 # Insert text in screen
-def insert_text(text):
-# Type the text "Hello World"
-    subprocess.run(['platform-tools/adb', 'shell', 'input', 'text', text])
+def insert_text(col):
+    # Type the text "Hello World"
+    # Subprocess to run
+    subprocess.run(['platform-tools/adb', 'shell', 'input', 'text', col])
 
 
 
