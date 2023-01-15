@@ -1,18 +1,6 @@
 # Load the Excel file
 import pandas as pd
-import gdown
-import gspread
-from oauth2client.service_account import ServiceAccountCredentials
 
-
-def read_excel_from_drive():
-    # login: boltscooterorders @ gmail.com
-    # Pass: BoltScooterOrdersGmail
-    # https://docs.google.com/spreadsheets/d/1P0iPFgKK4M_kiqTUgAHTa4X9NlGWmeZf5DKDPMvweI8/edit?usp=sharing
-
-    url = "https://docs.google.com/spreadsheets/d/1P0iPFgKK4M_kiqTUgAHTa4X9NlGWmeZf5DKDPMvweI8/edit?usp=sharing"
-    output = 'file.xlsx'
-    gdown.download(url, output, quiet=False,fuzzy=True)
 
 
 

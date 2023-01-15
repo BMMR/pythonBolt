@@ -4,11 +4,14 @@
 # Obejtive: Send ordens to Bolt Charger in order to send several comands at same time
 # ------> Click_made <------- means ation was taken
 #################################################
-# login: boltscooterorders@gmail.com
-# Pass: BoltScooterOrdersGmail
-
+import io
+import json
 import threading
 import time
+
+
+from googleapiclient.http import MediaIoBaseDownload
+
 from server import *
 from control_android import *
 from image_read import *
@@ -85,15 +88,14 @@ if __name__ == '__main__':
     sheet_name="orders" # selected Sheet name
     col_name = "qr_to_command" # selected Column
 
-    ########### End configuration ###########
-    read_excel_from_drive()
 
+    ###########################################
     if ativate_server==1:
         print("ativate_server")
-        #start_server()
+        start_server()
     else:
         print("Starting_threads")
-        #starting_threads(server,select_mode,thresold,fast_speed,slow_speed,file_to_read,sheet_name,col_name)
+        starting_threads(server,select_mode,thresold,fast_speed,slow_speed,file_to_read,sheet_name,col_name)
 
 
 
