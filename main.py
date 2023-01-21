@@ -23,9 +23,9 @@ def start_program(select_mode,thresold,fast_speed,slow_speed,file_to_read,sheet_
     colls,index_cells = read_return_all_cells(file_to_read, col_name) # Return all scooter tags
 
     while (True): # Main loop, in order to keep the readings of cells
+        index=0
 
         for col in colls:
-
             delect_last_row_val = True  # Delect last ROW By default
 
             for select_target in target_exec: # Following rules
@@ -47,16 +47,21 @@ def start_program(select_mode,thresold,fast_speed,slow_speed,file_to_read,sheet_
                 if select_target=="image/targets/tag_enter_id.png" or select_target=="image/targets/tag_enter_id_deploy.png":
                     # Selected col to insert text
                     col = col.replace("-", "")
-                    col="851640"
                     print("QR SELECTED --->" + col + "<----")
+                    col="851640"
+
                     insert_text(col) # insert text
 
                 else:
                     print("current target:" + select_target)
 
             if delect_last_row_val: # Delect the last row, means that deploy was sucess
-                print("delect_selected_row_in_file")
-                #delect_selected_row_in_file(file_to_read,index_cells)
+                print("-> delect_selected_row_in_file <--")
+                print("cols"+ str(col) +"index"+ str(index) + " file_read" + str(file_to_read))
+                delect_selected_row_in_file(file_to_read,index)
+
+        index = index + 1 # Index to delete file
+
 
 
 def starting_threads(server,select_mode,thresold,fast_speed,slow_speed,file_to_read,sheet_name,col_name):
@@ -89,7 +94,7 @@ if __name__ == '__main__':
     # Web server configuration (not used for now)
     server = False  # Start server ( not used for now)
     # Mode selection
-    select_mode = 4 # 1 - Open battery 2 - Take battery and open scoote - 3 Make deploy 4 - Make safety Check
+    select_mode = 1 # 1 - Open Scooter 2 - Take battery and open scoote - 3 Make deploy 4 - Make safety Check
     # Ajustments of selected speed
     fast_speed = 1 # More longer time, because of the conection
     slow_speed = 5 # General speed
@@ -103,10 +108,10 @@ if __name__ == '__main__':
     ###########################################
     if ativate_server==1:
         print("ativate_server")
-        start_server()
+        #start_server()
     else:
         print("Starting_threads")
-        starting_threads(server,select_mode,thresold,fast_speed,slow_speed,file_to_read,sheet_name,col_name)
+        #starting_threads(server,select_mode,thresold,fast_speed,slow_speed,file_to_read,sheet_name,col_name)
 
 
 
