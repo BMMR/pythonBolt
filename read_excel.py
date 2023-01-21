@@ -21,7 +21,9 @@ def read_return_all_cells(file_path,column_name):
     df = pd.read_excel(file_path)
     # get all cells in the specified column
     column_cells = df[column_name]
-    return column_cells
+    index_cells=column_cells.index
+
+    return column_cells,index_cells
 
 
 def read_excel(file):
@@ -34,14 +36,21 @@ def read_excel(file):
     return Last_read
 
 
+def delect_selected_row_in_file(file_path,row_index):
+    print("delect_selected_row_in_file")
+    # Read the Excel file into a DataFrame
+    df = pd.read_excel(file_path)
+    # Delete the specified row
+    df = df.drop(row_index)
+    # Save the changes to the file
+    df.to_excel(file_path, index=False)
+
 
 def delect_last_row(file):
     # Read the Excel file into a DataFrame
     df = pd.read_excel(file)
-
     # Delete the last row
     df = df[:-1]
-
     # Save the DataFrame to the Excel file
     df.to_excel(file, index=False)
 

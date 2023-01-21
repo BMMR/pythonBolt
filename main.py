@@ -20,17 +20,24 @@ def start_program(select_mode,thresold,fast_speed,slow_speed,file_to_read,sheet_
     # Selected mode of working
     target_exec=selected_modes_of_working(select_mode) # Return all targets
     # Test read excel
-    colls = read_return_all_cells(file_to_read, col_name) # Return all scooter tags
+    colls,index_cells = read_return_all_cells(file_to_read, col_name) # Return all scooter tags
 
     while (True): # Main loop, in order to keep the readings of cells
 
         for col in colls:
+
+            delect_last_row_val = True  # Delect last ROW By default
+
             for select_target in target_exec: # Following rules
                 set_speed=selected_speed_read_image(select_target, fast_speed, slow_speed)
                 # Screenshot of screen
                 screen_shot(set_speed) # Take screen shot of the screen
                 # Start read process
-                center_pointX, center_pointY=start_read_process('image/screenshot.png', select_target,thresold)
+                center_pointX, center_pointY, max_val=start_read_process('image/screenshot.png', select_target,thresold)
+                # Means that Found the dismiss warning and fail the deploy Means as well that dont need to delect the espefic Row
+                if max_val>thresold and select_target=="image/targets/tag_dismiss_deploy.png":
+                    print("Falhou a leitura, não apaga ID")
+                    delect_last_row_val= True # Fail, do not delect last row
                 # Click on target
                 if center_pointX!="0" and center_pointY!="0":
                     click_touch(center_pointX,center_pointY)
@@ -40,12 +47,15 @@ def start_program(select_mode,thresold,fast_speed,slow_speed,file_to_read,sheet_
                 if select_target=="image/targets/tag_enter_id.png" or select_target=="image/targets/tag_enter_id_deploy.png":
                     # Selected col to insert text
                     col = col.replace("-", "")
-                    col="851640"
+                    #col="851640"
                     print("QR SELECTED --->" + col + "<----")
                     insert_text(col) # insert text
 
                 else:
                     print("current target:" + select_target)
+
+            if delect_last_row_val: # Delect the last row, means that deploy was sucess
+                delect_selected_row_in_file(file_to_read,index_cells)
 
 
 def starting_threads(server,select_mode,thresold,fast_speed,slow_speed,file_to_read,sheet_name,col_name):

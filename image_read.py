@@ -76,7 +76,7 @@ def start_read_process(original,target,thresold):
         top_leftF="0" # if dont find nothing
         bottom_rightF="0" # if dont find nothing
 
-    return top_leftF, bottom_rightF
+    return top_leftF, bottom_rightF,max_val
 
 def calculation_point(top_left, bottom_right):
     pointX0= top_left[0] # Point X0
