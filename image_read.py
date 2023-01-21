@@ -7,6 +7,8 @@ def selected_speed_read_image(select_target,fast_speed,slow_speed):
     # Ajusting speed of reading
     if select_target == "image/targets/tag_open_sc.png":  # process should be slowest
         set_speed = slow_speed  # Lower speed because of first loading
+    if select_target == "image/targets/tag_enter_id_deploy.png":
+        set_speed = slow_speed  # Lower speed because of first loading
     else:
         set_speed = fast_speed  # Higher speed to process the code of phone (not related with the internet connection)
 
@@ -25,6 +27,13 @@ def selected_modes_of_working(select_mode):
                                     'image/targets/tag_3_dots.png', 'image/targets/tag_replace_batt.png',
                                     'image/targets/tag_return.png']
         target_exec = target_open_batt_scooter
+
+    if select_mode == 3:
+        target_deploy_scooter = ['image/targets/tag_scan_deploy.png', 'image/targets/tag_enter_id_deploy.png',
+                                    'image/targets/tag_start_deploy.png', 'image/targets/tag_dismiss_deploy.png',
+                                    'image/targets/tag_close_deploy.png']
+        target_exec = target_deploy_scooter
+
 
     return target_exec
 
@@ -55,7 +64,6 @@ def start_read_process(original,target,thresold):
 
         # Display the source image with the rectangle drawn on it
         cv2.imwrite('image/save.png', source)
-
     except:
         print("Error: Image dont read")
 
