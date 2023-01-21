@@ -47,7 +47,7 @@ def start_program(select_mode,thresold,fast_speed,slow_speed,file_to_read,sheet_
                 if select_target=="image/targets/tag_enter_id.png" or select_target=="image/targets/tag_enter_id_deploy.png":
                     # Selected col to insert text
                     col = col.replace("-", "")
-                    #col="851640"
+                    col="851640"
                     print("QR SELECTED --->" + col + "<----")
                     insert_text(col) # insert text
 
@@ -55,7 +55,8 @@ def start_program(select_mode,thresold,fast_speed,slow_speed,file_to_read,sheet_
                     print("current target:" + select_target)
 
             if delect_last_row_val: # Delect the last row, means that deploy was sucess
-                delect_selected_row_in_file(file_to_read,index_cells)
+                print("delect_selected_row_in_file")
+                #delect_selected_row_in_file(file_to_read,index_cells)
 
 
 def starting_threads(server,select_mode,thresold,fast_speed,slow_speed,file_to_read,sheet_name,col_name):
@@ -88,7 +89,7 @@ if __name__ == '__main__':
     # Web server configuration (not used for now)
     server = False  # Start server ( not used for now)
     # Mode selection
-    select_mode = 3 # 1 - Open battery 2 - Take battery and open scoote
+    select_mode = 4 # 1 - Open battery 2 - Take battery and open scoote - 3 Make deploy 4 - Make safety Check
     # Ajustments of selected speed
     fast_speed = 1 # More longer time, because of the conection
     slow_speed = 5 # General speed

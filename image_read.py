@@ -34,6 +34,12 @@ def selected_modes_of_working(select_mode):
                                     'image/targets/tag_close_deploy.png']
         target_exec = target_deploy_scooter
 
+    if select_mode == 4:
+        target_safety_check_scooter = ['image/targets/tag_enter_id.png', 'image/targets/tag_open_sc.png',
+                                    'image/targets/tag_3_dots.png', 'image/targets/tag_safety_check.png',
+                                    'image/targets/tag_return.png','image/targets/tag_dismiss_safety_check.png']
+        target_exec = target_safety_check_scooter
+
 
     return target_exec
 
