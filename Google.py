@@ -1,117 +1,65 @@
-
-import pickle
-import os
-import datetime
-from collections import namedtuple
-from google_auth_oauthlib.flow import Flow, InstalledAppFlow
-from googleapiclient.discovery import build
-from googleapiclient.http import MediaFileUpload, MediaIoBaseDownload
+from __future__ import print_function
+import os.path
 from google.auth.transport.requests import Request
+from google.oauth2.credentials import Credentials
+from google_auth_oauthlib.flow import InstalledAppFlow
+from googleapiclient.discovery import build
+from googleapiclient.errors import HttpError
+import google.auth
 
 
-def Create_Service(client_secret_file, api_name, api_version, *scopes, prefix=''):
-    CLIENT_SECRET_FILE = client_secret_file
-    API_SERVICE_NAME = api_name
-    API_VERSION = api_version
-    SCOPES = [scope for scope in scopes[0]]
 
-    cred = None
-    working_dir = os.getcwd()
-    token_dir = 'token files'
-    pickle_file = f'token_{API_SERVICE_NAME}_{API_VERSION}{prefix}.pickle'
+def test_drive_connection():
 
-    ### Check if token dir exists first, if not, create the folder
-    if not os.path.exists(os.path.join(working_dir, token_dir)):
-        os.mkdir(os.path.join(working_dir, token_dir))
+    # If modifying these scopes, delete the file token.json.
+    # If modifying these scopes, delete the file token.json.
+    SCOPES = ['https://www.googleapis.com/auth/drive']
 
-    if os.path.exists(os.path.join(working_dir, token_dir, pickle_file)):
-        with open(os.path.join(working_dir, token_dir, pickle_file), 'rb') as token:
-            cred = pickle.load(token)
+    # The ID and range of a sample spreadsheet.
+    SAMPLE_SPREADSHEET_ID = '1P0iPFgKK4M_kiqTUgAHTa4X9NlGWmeZf5DKDPMvweI8'
+    SAMPLE_RANGE_NAME = 'orders'
 
-    if not cred or not cred.valid:
-        if cred and cred.expired and cred.refresh_token:
-            cred.refresh(Request())
+
+    """Shows basic usage of the Sheets API.
+    Prints values from a sample spreadsheet.
+    """
+    creds = None
+    # The file token.json stores the user's access and refresh tokens, and is
+    # created automatically when the authorization flow completes for the first
+    # time.
+    if os.path.exists('token.json'):
+        creds = Credentials.from_authorized_user_file('token.json', SCOPES)
+    # If there are no (valid) credentials available, let the user log in.
+    if not creds or not creds.valid:
+        if creds and creds.expired and creds.refresh_token:
+            creds.refresh(Request())
         else:
-            flow = InstalledAppFlow.from_client_secrets_file(CLIENT_SECRET_FILE, SCOPES)
-            cred = flow.run_local_server()
-
-        with open(os.path.join(working_dir, token_dir, pickle_file), 'wb') as token:
-            pickle.dump(cred, token)
+            flow = InstalledAppFlow.from_client_secrets_file(
+                'credentials/client_secret.json', SCOPES)
+            creds = flow.run_local_server(port=0)
+        # Save the credentials for the next run
+        with open('token.json', 'w') as token:
+            token.write(creds.to_json())
 
     try:
-        service = build(API_SERVICE_NAME, API_VERSION, credentials=cred)
-        print(API_SERVICE_NAME, API_VERSION, 'service created successfully')
-        return service
-    except Exception as e:
-        print(e)
-        print(f'Failed to create service instance for {API_SERVICE_NAME}')
-        os.remove(os.path.join(working_dir, token_dir, pickle_file))
-        return None
 
+        values=get_values_from_sheets(creds, SAMPLE_SPREADSHEET_ID, SAMPLE_RANGE_NAME)
 
-def convert_to_RFC_datetime(year=1900, month=1, day=1, hour=0, minute=0):
-    dt = datetime.datetime(year, month, day, hour, minute, 0).isoformat() + 'Z'
-    return dt
+        return values
 
+    except HttpError as err:
+        print(err)
 
-class GoogleSheetsHelper:
-    # --> spreadsheets().batchUpdate()
-    Paste_Type = namedtuple('_Paste_Type',
-                            ('normal', 'value', 'format', 'without_borders',
-                             'formula', 'date_validation', 'conditional_formatting')
-                            )('PASTE_NORMAL', 'PASTE_VALUES', 'PASTE_FORMAT', 'PASTE_NO_BORDERS',
-                              'PASTE_FORMULA', 'PASTE_DATA_VALIDATION', 'PASTE_CONDITIONAL_FORMATTING')
+def get_values_from_sheets(creds,SAMPLE_SPREADSHEET_ID,SAMPLE_RANGE_NAME):
+    service = build('sheets', 'v4', credentials=creds)
+    # Call the Sheets API
+    sheet = service.spreadsheets()
+    result = sheet.values().get(spreadsheetId=SAMPLE_SPREADSHEET_ID,
+                                range=SAMPLE_RANGE_NAME).execute()
+    values = result.get('values', [])
 
-    Paste_Orientation = namedtuple('_Paste_Orientation', ('normal', 'transpose'))('NORMAL', 'TRANSPOSE')
+    if not values:
+        print('-->> No data found on file <<--')
+        return
 
-    Merge_Type = namedtuple('_Merge_Type', ('merge_all', 'merge_columns', 'merge_rows')
-                            )('MERGE_ALL', 'MERGE_COLUMNS', 'MERGE_ROWS')
-
-    Delimiter_Type = namedtuple('_Delimiter_Type', ('comma', 'semicolon', 'period', 'space', 'custom', 'auto_detect')
-                                )('COMMA', 'SEMICOLON', 'PERIOD', 'SPACE', 'CUSTOM', 'AUTODETECT')
-
-    # --> Types
-    Dimension = namedtuple('_Dimension', ('rows', 'columns'))('ROWS', 'COLUMNS')
-
-    Value_Input_Option = namedtuple('_Value_Input_Option', ('raw', 'user_entered'))('RAW', 'USER_ENTERED')
-
-    Value_Render_Option = namedtuple('_Value_Render_Option', ["formatted", "unformatted", "formula"]
-                                     )("FORMATTED_VALUE", "UNFORMATTED_VALUE", "FORMULA")
-
-    @staticmethod
-    def define_cell_range(
-            sheet_id,
-            start_row_number=1, end_row_number=0,
-            start_column_number=None, end_column_number=0):
-        """GridRange object"""
-        json_body = {
-            'sheetId': sheet_id,
-            'startRowIndex': start_row_number - 1,
-            'endRowIndex': end_row_number,
-            'startColumnIndex': start_column_number - 1,
-            'endColumnIndex': end_column_number
-        }
-        return json_body
-
-    @staticmethod
-    def define_dimension_range(sheet_id, dimension, start_index, end_index):
-        json_body = {
-            'sheetId': sheet_id,
-            'dimension': dimension,
-            'startIndex': start_index,
-            'endIndex': end_index
-        }
-        return json_body
-
-
-class GoogleCalendarHelper:
-    ...
-
-
-class GoogleDriverHelper:
-    ...
-
-
-if __name__ == '__main__':
-    g = GoogleSheetsHelper()
-    print(g.Delimiter_Type)
+    return values

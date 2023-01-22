@@ -4,7 +4,6 @@
 # Obejtive: Send ordens to Bolt Charger in order to send several comands at same time
 # ------> Click_made <------- means ation was taken
 #################################################
-from __future__ import print_function
 
 import io
 import json
@@ -18,15 +17,6 @@ from read_excel import *
 from Google import *
 #############################33
 
-import os.path
-
-from google.auth.transport.requests import Request
-from google.oauth2.credentials import Credentials
-from google_auth_oauthlib.flow import InstalledAppFlow
-from googleapiclient.discovery import build
-from googleapiclient.errors import HttpError
-
-
 
 # Funtions related to viewer software
 def start_program(select_mode,thresold,fast_speed,slow_speed,file_to_read,sheet_name,col_name):
@@ -35,7 +25,10 @@ def start_program(select_mode,thresold,fast_speed,slow_speed,file_to_read,sheet_
     # Test read excel
     colls,index_cells = read_return_all_cells(file_to_read, col_name) # Return all scooter tags
 
-    while (True): # Main loop, in order to keep the readings of cells
+
+
+
+    while (False): # Main loop, in order to keep the readings of cells
         index=0
         for col in colls:
             delect_last_row_val = True  # Delect last ROW By default
@@ -87,57 +80,7 @@ def starting_threads(server,select_mode,thresold,fast_speed,slow_speed,file_to_r
     thread_2.start()
 
 
-def test_drive_connection():
 
-    # If modifying these scopes, delete the file token.json.
-    SCOPES = ['https://spreadsheets.google.com/feeds',
-             'https://www.googleapis.com/auth/drive']
-
-    # The ID and range of a sample spreadsheet.
-    SAMPLE_SPREADSHEET_ID = '1P0iPFgKK4M_kiqTUgAHTa4X9NlGWmeZf5DKDPMvweI8'
-    SAMPLE_RANGE_NAME = 'orders'
-
-
-    """Shows basic usage of the Sheets API.
-    Prints values from a sample spreadsheet.
-    """
-    creds = None
-    # The file token.json stores the user's access and refresh tokens, and is
-    # created automatically when the authorization flow completes for the first
-    # time.
-    if os.path.exists('token.json'):
-        creds = Credentials.from_authorized_user_file('token.json', SCOPES)
-    # If there are no (valid) credentials available, let the user log in.
-    if not creds or not creds.valid:
-        if creds and creds.expired and creds.refresh_token:
-            creds.refresh(Request())
-        else:
-            flow = InstalledAppFlow.from_client_secrets_file(
-                'credentials/client_secret.json', SCOPES)
-            creds = flow.run_local_server(port=0)
-        # Save the credentials for the next run
-        with open('token.json', 'w') as token:
-            token.write(creds.to_json())
-
-    try:
-        service = build('sheets', 'v4', credentials=creds)
-
-        # Call the Sheets API
-        sheet = service.spreadsheets()
-        result = sheet.values().get(spreadsheetId=SAMPLE_SPREADSHEET_ID,
-                                    range=SAMPLE_RANGE_NAME).execute()
-        values = result.get('values', [])
-
-        if not values:
-            print('No data found.')
-            return
-
-        print('Name, Major:')
-        for row in values:
-            # Print columns A and E, which correspond to indices 0 and 4.
-            print('%s, %s' % (row[0], row[4]))
-    except HttpError as err:
-        print(err)
 
 
 # ----->  Main Menu <----- #
@@ -164,8 +107,11 @@ if __name__ == '__main__':
     sheet_name="orders" # selected Sheet name
     col_name = "qr_to_command" # selected Column
     ###########################################
-    test_drive_connection()
-
+    # Send orders to the file
+    values=test_drive_connection()
+    for row in values:
+        # Print columns A and E, which correspond to indices 0 and 4.
+        print('%s, %s' % (row[0], row[1]))
 
     ###########################################
     if ativate_server==1:
