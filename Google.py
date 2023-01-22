@@ -6,7 +6,7 @@ from google_auth_oauthlib.flow import InstalledAppFlow
 from googleapiclient.discovery import build
 from googleapiclient.errors import HttpError
 import google.auth
-
+from read_excel import create_file_with_incoming_information
 
 
 def test_drive_connection():
@@ -63,3 +63,8 @@ def get_values_from_sheets(creds,SAMPLE_SPREADSHEET_ID,SAMPLE_RANGE_NAME):
         return
 
     return values
+
+def update_google_file(location_file):
+    # Send orders to the file
+    values = test_drive_connection()
+    create_file_with_incoming_information(location_file, values)

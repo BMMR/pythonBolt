@@ -2,8 +2,6 @@
 import pandas as pd
 
 
-
-
 def return_excel_size_col(file_to_read,sheet_name,col_name):
     # Read the Excel file
     df = pd.read_excel(file_to_read, sheet_name=sheet_name)
@@ -53,4 +51,11 @@ def delect_last_row(file):
     df = df[:-1]
     # Save the DataFrame to the Excel file
     df.to_excel(file, index=False)
+
+def create_file_with_incoming_information(file,data):
+    print("----> File updated from google drive <------")
+    #print("all data->>>>>>>>>>>"+ str(data))
+    df = pd.DataFrame(data)
+    # Save the DataFrame to an .xlsx file
+    df.to_excel(file,index=False,header=False)
 

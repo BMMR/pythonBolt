@@ -20,19 +20,40 @@ from Google import *
 
 # Funtions related to viewer software
 def start_program(select_mode,thresold,fast_speed,slow_speed,file_to_read,sheet_name,col_name):
+    value = True
+    while (value):
+        update_google_file(file_to_read)
+        # Test read excel
+        colls,index_cells = read_return_all_cells(file_to_read, col_name) # Return all scooter tags
+        index=0 # Has oen in front in file
+        for row in colls:
+            if row=="open":
+                print("index"+str(index))
+                delect_selected_row_in_file(file_to_read, index)
+                value=False
+                select_mode=1
+            elif row=="battery":
+                delect_selected_row_in_file(file_to_read, index)
+                value = False
+                select_mode = 2
+            elif row == "deploy":
+                delect_selected_row_in_file(file_to_read, index)
+                value = False
+                select_mode = 3
+            elif row == "safety":
+                delect_selected_row_in_file(file_to_read, index)
+                value = False
+                select_mode = 4
+            index = index + 1
+        time.sleep(3)
+
     # Selected mode of working
-    target_exec=selected_modes_of_working(select_mode) # Return all targets
-    # Test read excel
-    colls,index_cells = read_return_all_cells(file_to_read, col_name) # Return all scooter tags
+    target_exec = selected_modes_of_working(select_mode)  # Return all targets
 
-
-
-
-    while (False): # Main loop, in order to keep the readings of cells
-        index=0
+    while (True): # Main loop, in order to keep the readings of cell
+        index=1
         for col in colls:
-            delect_last_row_val = True  # Delect last ROW By default
-
+            delect_last_row_val = False  # Delect last ROW By default
             for select_target in target_exec: # Following rules
                 set_speed=selected_speed_read_image(select_target, fast_speed, slow_speed)
                 # Screenshot of screen
@@ -52,6 +73,7 @@ def start_program(select_mode,thresold,fast_speed,slow_speed,file_to_read,sheet_
                     # Selected col to insert text
                     col = col.replace("-", "")
                     print("QR SELECTED --->" + col + "<----")
+                    col="851640"
                     insert_text(col) # insert text
                 else:
                     print("current target:" + select_target)
@@ -81,8 +103,6 @@ def starting_threads(server,select_mode,thresold,fast_speed,slow_speed,file_to_r
 
 
 
-
-
 # ----->  Main Menu <----- #
 if __name__ == '__main__':
 
@@ -103,23 +123,19 @@ if __name__ == '__main__':
     slow_speed = 5 # General speed
     thresold = 0.97 # Ajusment for the image recognition
     # Selected reading files
+
+
     file_to_read = "external_info/escooter_orders.xlsx" # File source
     sheet_name="orders" # selected Sheet name
-    col_name = "qr_to_command" # selected Column
-    ###########################################
-    # Send orders to the file
-    values=test_drive_connection()
-    for row in values:
-        # Print columns A and E, which correspond to indices 0 and 4.
-        print('%s, %s' % (row[0], row[1]))
+    col_name = "Scooter" # selected Column
+    update_google_file(file_to_read)
 
-    ###########################################
     if ativate_server==1:
         print("ativate_server")
         #start_server()
     else:
         print("Starting_threads")
-        #starting_threads(server,select_mode,thresold,fast_speed,slow_speed,file_to_read,sheet_name,col_name)
+        starting_threads(server,select_mode,thresold,fast_speed,slow_speed,file_to_read,sheet_name,col_name)
 
 
 
