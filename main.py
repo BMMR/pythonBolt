@@ -67,7 +67,6 @@ def start_program(select_mode,thresold,fast_speed,slow_speed,file_to_read,sheet_
                 if center_pointX!="0" and center_pointY!="0":
                     click_touch(center_pointX,center_pointY)
                     print("------> Click_made <-------")
-
                 # Only delect file when the ID was writed
                 if select_target=="image/targets/tag_enter_id.png" or select_target=="image/targets/tag_enter_id_deploy.png":
                     # Selected col to insert text
